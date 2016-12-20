@@ -1,1 +1,2 @@
 # DiasporaProjectVR
+Check the wiki
