@@ -1,0 +1,7 @@
+F:\Repos\DiasporaServer\DiasporaServer\DiasporaServer\bin\Debug\DiasporaServer.exe.config
+F:\Repos\DiasporaServer\DiasporaServer\DiasporaServer\bin\Debug\DiasporaServer.exe
+F:\Repos\DiasporaServer\DiasporaServer\DiasporaServer\bin\Debug\DiasporaServer.pdb
+F:\Repos\DiasporaServer\DiasporaServer\DiasporaServer\bin\Debug\LiteNetLib.dll
+F:\Repos\DiasporaServer\DiasporaServer\DiasporaServer\obj\Debug\DiasporaServer.csprojResolveAssemblyReference.cache
+F:\Repos\DiasporaServer\DiasporaServer\DiasporaServer\obj\Debug\DiasporaServer.exe
+F:\Repos\DiasporaServer\DiasporaServer\DiasporaServer\obj\Debug\DiasporaServer.pdb

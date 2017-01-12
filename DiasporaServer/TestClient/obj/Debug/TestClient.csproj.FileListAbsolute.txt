@@ -1,0 +1,8 @@
+F:\Repos\DiasporaServer\DiasporaServer\TestClient\bin\Debug\TestClient.exe.config
+F:\Repos\DiasporaServer\DiasporaServer\TestClient\bin\Debug\TestClient.exe
+F:\Repos\DiasporaServer\DiasporaServer\TestClient\bin\Debug\TestClient.pdb
+F:\Repos\DiasporaServer\DiasporaServer\TestClient\bin\Debug\LiteNetLib.dll
+F:\Repos\DiasporaServer\DiasporaServer\TestClient\obj\Debug\TestClient.csprojResolveAssemblyReference.cache
+F:\Repos\DiasporaServer\DiasporaServer\TestClient\obj\Debug\TestClient.exe
+F:\Repos\DiasporaServer\DiasporaServer\TestClient\obj\Debug\TestClient.pdb
+F:\Repos\DiasporaServer\DiasporaServer\TestClient\bin\Debug\FlatBuffers.dll
