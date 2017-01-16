@@ -94,7 +94,7 @@ namespace TestClient
 
         private byte[] buildMessage(string message)
         {
-            FlatBufferBuilder builder = new FlatBufferBuilder(0x400);
+            FlatBufferBuilder builder = new FlatBufferBuilder(1024);
             StringOffset nameOffset = builder.CreateString($"[{this.chatName}]: ");
             StringOffset messageOffset = builder.CreateString(message);
             StringOffset interestIDOffset = builder.CreateString(this.RoomId);
@@ -104,8 +104,8 @@ namespace TestClient
             ChatMessage.AddMHeader(builder, mHeaderOffset);
             ChatMessage.AddName(builder, nameOffset);
             ChatMessage.AddMessage(builder, messageOffset);
-            Offset<ChatMessage> offset6 = ChatMessage.EndChatMessage(builder);
-            builder.Finish(offset6.Value);
+            var msg = ChatMessage.EndChatMessage(builder);
+            builder.Finish(msg.Value);
             return builder.SizedByteArray();
         }
 
@@ -113,7 +113,7 @@ namespace TestClient
         private byte[] buildMove(string NewRoom)
         {
             this.RoomId = NewRoom;
-            FlatBufferBuilder builder = new FlatBufferBuilder(0x400);
+            FlatBufferBuilder builder = new FlatBufferBuilder(1024);
             StringOffset interestIDOffset = builder.CreateString(this.RoomId);
             StringOffset regionIDOffset = builder.CreateString(this.RegionId);
             Offset<Header> mHeaderOffset = Header.CreateHeader(builder, interestIDOffset, regionIDOffset, MessageType.Move);

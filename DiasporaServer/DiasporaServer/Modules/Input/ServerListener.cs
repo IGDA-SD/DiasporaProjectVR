@@ -21,10 +21,12 @@ namespace DiasporaServer.Modules.Input
             {
                 Console.WriteLine("ConnectedPeersList: id={0}, ep={1}", netPeer.Id, netPeer.EndPoint);
             }
+            InterestManagement.InterestManager.Instance.Regions["System"].Nodes[0].Subscribe(peer);
         }
 
         public void OnPeerDisconnected(NetPeer peer, DisconnectReason disconnectReason, int socketErrorCode)
         {
+            InterestManagement.InterestManager.Instance.RemovePeer(peer);
             Console.WriteLine("[Server] Peer disconnected: " + peer.EndPoint + ", reason: " + disconnectReason);
         }
 
@@ -43,14 +45,14 @@ namespace DiasporaServer.Modules.Input
             Console.WriteLine("Recieved message");
             try
             {
-                new Thread((ThreadStart)(() => new MessageJob(reader.Data, peer))).Start();
+                new Thread(() => new MessageJob(reader.Data, peer)).Start();
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception.Message);
                 throw;
             }
-
+            //new MessageJob(reader.Data, peer);
         }
 
         public void OnNetworkReceiveUnconnected(NetEndPoint remoteEndPoint, NetDataReader reader, UnconnectedMessageType messageType)
