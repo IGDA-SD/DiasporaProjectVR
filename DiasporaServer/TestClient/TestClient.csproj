@@ -51,8 +51,6 @@
   <ItemGroup>
     <Compile Include="ClientListener.cs" />
     <Compile Include="Diaspora\Transport\chatMessage.cs" />
-    <Compile Include="Diaspora\Transport\TestMessage.cs" />
-    <Compile Include="Diaspora\Transport\Vec3.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
