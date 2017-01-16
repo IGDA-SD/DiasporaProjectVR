@@ -14,6 +14,10 @@ namespace TestClient
     {
         public NetClient Client;
         private string chatName;
+        private string RegionId = "System";
+        private string RoomId = "Global";
+
+
         public void OnNetworkError(NetEndPoint endPoint, int socketErrorCode)
         {
             Console.WriteLine("[Client] error! " + socketErrorCode);
@@ -51,47 +55,74 @@ namespace TestClient
 
         public void Run()
         {
-            //Client.SendUnconnectedMessage(new byte[] { 1 }, new NetEndPoint("50.113.84.153", 9050));
-            NetDataWriter dataWriter = new NetDataWriter();
-            string input;
+            NetDataWriter writer = new NetDataWriter();
             Console.WriteLine("Enter your name");
-            chatName = Console.ReadLine();
-            Console.WriteLine("Welcome " + chatName + " \nEnter q to quit");
+            this.chatName = Console.ReadLine();
+            Console.WriteLine("Welcome " + this.chatName + " \nEnter q to quit");
+            Console.WriteLine("To change rooms type /r roomName, leave roomName blank to rejoin global");
             while (true)
             {
                 if (Console.KeyAvailable)
                 {
-                    input = Console.ReadLine();
-                    if (input != "" && input != "q")
+                    string message = Console.ReadLine();
+                    if ((message != "") && (message != "q"))
                     {
-                        //dataWriter.Reset();
-                        //dataWriter.Data. = ;
-                        Client.Peer.Send(buildMessage(input), SendOptions.Unreliable);
+                        char[] separator = new char[] { ' ' };
+                        string[] strArray = message.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                        if (strArray[0].Contains("/r"))
+                        {
+                            this.Client.Peer.Send(this.buildMove((strArray.Length > 1) ? strArray[1] : "Global"), SendOptions.ReliableUnordered);
+                        }
+                        else
+                        {
+                            this.Client.Peer.Send(this.buildMessage(message), SendOptions.Unreliable);
+                        }
                     }
-                    else if(input == "q")
+                    else if (message == "q")
                     {
-                        Client.Disconnect();
-                        break;
+                        this.Client.Disconnect();
+                        return;
                     }
                 }
                 else
                 {
-                    Client.PollEvents();
+                    this.Client.PollEvents();
                 }
             }
+
         }
 
         private byte[] buildMessage(string message)
         {
-            var builder = new FlatBufferBuilder(1024);
-            var cName = builder.CreateString(string.Format("[{0}]: ", chatName));
-            var m = builder.CreateString(message);
+            FlatBufferBuilder builder = new FlatBufferBuilder(0x400);
+            StringOffset nameOffset = builder.CreateString($"[{this.chatName}]: ");
+            StringOffset messageOffset = builder.CreateString(message);
+            StringOffset interestIDOffset = builder.CreateString(this.RoomId);
+            StringOffset regionIDOffset = builder.CreateString(this.RegionId);
+            Offset<Header> mHeaderOffset = Header.CreateHeader(builder, interestIDOffset, regionIDOffset, MessageType.Chat);
             ChatMessage.StartChatMessage(builder);
-            ChatMessage.AddName(builder, cName);
-            ChatMessage.AddMessage(builder, m);
-            var msg = ChatMessage.EndChatMessage(builder);
-            builder.Finish(msg.Value);
+            ChatMessage.AddMHeader(builder, mHeaderOffset);
+            ChatMessage.AddName(builder, nameOffset);
+            ChatMessage.AddMessage(builder, messageOffset);
+            Offset<ChatMessage> offset6 = ChatMessage.EndChatMessage(builder);
+            builder.Finish(offset6.Value);
             return builder.SizedByteArray();
         }
+
+
+        private byte[] buildMove(string NewRoom)
+        {
+            this.RoomId = NewRoom;
+            FlatBufferBuilder builder = new FlatBufferBuilder(0x400);
+            StringOffset interestIDOffset = builder.CreateString(this.RoomId);
+            StringOffset regionIDOffset = builder.CreateString(this.RegionId);
+            Offset<Header> mHeaderOffset = Header.CreateHeader(builder, interestIDOffset, regionIDOffset, MessageType.Move);
+            ChatMessage.StartChatMessage(builder);
+            ChatMessage.AddMHeader(builder, mHeaderOffset);
+            Offset<ChatMessage> offset4 = ChatMessage.EndChatMessage(builder);
+            builder.Finish(offset4.Value);
+            return builder.SizedByteArray();
+        }
+
     }
 }
