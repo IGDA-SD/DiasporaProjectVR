@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using System.Threading;
 
 namespace DiasporaServer.Modules.Input
 {
@@ -42,15 +43,14 @@ namespace DiasporaServer.Modules.Input
             Console.WriteLine("Recieved message");
             try
             {
-                //Console.WriteLine(reader.GetString(100));
-                Console.WriteLine(Server.GetPeers().Length);
-                Server.SendToClients(reader.Data, SendOptions.Unreliable, peer);
+                new Thread((ThreadStart)(() => new MessageJob(reader.Data, peer))).Start();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(exception.Message);
                 throw;
             }
+
         }
 
         public void OnNetworkReceiveUnconnected(NetEndPoint remoteEndPoint, NetDataReader reader, UnconnectedMessageType messageType)
